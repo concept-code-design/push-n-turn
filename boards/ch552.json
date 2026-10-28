@@ -1,0 +1,22 @@
+{
+  "build": {
+    "mcu": "CH552",
+    "f_cpu": "24000000L",
+    "f_oscillator_external": "0L",
+    "core": "ch55xduino",
+    "variant": "ch552",
+    "usb_ram": 148,
+    "hwids": [["0x1209", "0xCAC1"]]
+  },
+  "frameworks": ["ch55xduino"],
+  "name": "CH552 (24 MHz, USER CODE w/ 148B USB RAM)",
+  "upload": {
+    "maximum_size": 14336,
+    "maximum_ram_size": 876,
+    "bootcfg": 3,
+    "protocol": "vnproch55x",
+    "protocols": ["vnproch55x"]
+  },
+  "url": "https://www.wch-ic.com/products/CH552.html",
+  "vendor": "WCH"
+}

@@ -1,0 +1,16 @@
+{
+  "name": "ch55x",
+  "title": "WCH CH55x (ch55xduino)",
+  "description": "Local PlatformIO platform for WCH CH55x MCUs using the ch55xduino 0.0.26 core, its patched SDCC build and the vnproch55x uploader. Toolchain packages are downloaded on first build for macOS, Windows and Linux.",
+  "homepage": "https://github.com/DeqingSun/ch55xduino",
+  "license": "Apache-2.0",
+  "version": "0.1.0",
+  "frameworks": {
+    "ch55xduino": {
+      "script": "builder/frameworks/ch55xduino.py",
+      "title": "ch55xduino",
+      "description": "Arduino-style C core for CH55x (SDCC)"
+    }
+  },
+  "packages": {}
+}

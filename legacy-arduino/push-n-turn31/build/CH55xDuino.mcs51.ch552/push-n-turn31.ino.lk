@@ -1,0 +1,32 @@
+-muwx
+-i /Users/ronald/Library/Caches/arduino/sketches/571D4B0E0653070C3C05CFF072EF5944/push-n-turn31.ino.elf
+-M
+-X 0x036c
+-C 0x3800
+-b HOME = 0x0000
+-b XSEG = 0x0094
+-b PSEG = 0x0094
+-b ISEG = 0x0000
+-b BSEG = 0x0000
+-k /Users/ronald/Library/Caches/arduino/sketches/571D4B0E0653070C3C05CFF072EF5944
+-k /Users/ronald/Library/Arduino15/packages/CH55xDuino/tools/sdcc/build.13407_4/share/sdcc/lib/large_int_calc_stack_auto
+-l /Users/ronald/Library/Caches/arduino/sketches/571D4B0E0653070C3C05CFF072EF5944/optionalLink.lib
+-l /Users/ronald/Library/Caches/arduino/sketches/571D4B0E0653070C3C05CFF072EF5944/../../cores/354ae5e08bd6c33d137e667b14fb818b/core.lib
+-l mcs51
+-l libsdcc
+-l liblong
+-l liblonglong
+-l libint
+-l libfloat
+/Users/ronald/Library/Caches/arduino/sketches/571D4B0E0653070C3C05CFF072EF5944/sketch/push-n-turn31.ino.cpp.rel
+/Users/ronald/Library/Caches/arduino/sketches/571D4B0E0653070C3C05CFF072EF5944/sketch/src/delay.c.rel
+/Users/ronald/Library/Caches/arduino/sketches/571D4B0E0653070C3C05CFF072EF5944/sketch/src/neo.c.rel
+/Users/ronald/Library/Caches/arduino/sketches/571D4B0E0653070C3C05CFF072EF5944/sketch/src/usb_composite.c.rel
+/Users/ronald/Library/Caches/arduino/sketches/571D4B0E0653070C3C05CFF072EF5944/sketch/src/usb_descr.c.rel
+/Users/ronald/Library/Caches/arduino/sketches/571D4B0E0653070C3C05CFF072EF5944/sketch/src/usb_handler.c.rel
+/Users/ronald/Library/Caches/arduino/sketches/571D4B0E0653070C3C05CFF072EF5944/sketch/src/usb_hid.c.rel
+/Users/ronald/Library/Caches/arduino/sketches/571D4B0E0653070C3C05CFF072EF5944/libraries/mimuz-ch55x/USBhandler.c.rel
+/Users/ronald/Library/Caches/arduino/sketches/571D4B0E0653070C3C05CFF072EF5944/libraries/mimuz-ch55x/mimuz-ch55x.c.rel
+/Users/ronald/Library/Caches/arduino/sketches/571D4B0E0653070C3C05CFF072EF5944/libraries/WS2812/WS2812.c.rel
+
+-e

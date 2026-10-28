@@ -1,0 +1,9 @@
+{
+  "name": "mimuz-ch55x",
+  "version": "0.1.2+cc.2",
+  "description": "mi:muz USB-MIDI (+CDC) library for ch55xduino. Local copy with the getChannel/getNote/getVel callback workaround and two Windows enumeration fixes (STALL on unknown string index, answer GET_INTERFACE).",
+  "authors": [{"name": "D.F.Mac. @TripArts Music"}, {"name": "Ronald Leenes"}],
+  "repository": {"type": "git", "url": "https://github.com/mimuz/mimuz-ch55x"},
+  "frameworks": "*",
+  "platforms": "*"
+}

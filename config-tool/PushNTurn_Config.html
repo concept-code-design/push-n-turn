@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Push-n-Turn — Configuration</title>
+<style>
+  :root{
+    --bg:#f4f5f7; --card:#ffffff; --ink:#1d2129; --muted:#6b7280; --line:#e3e6ea;
+    --accent:#3b6ef5; --accent-ink:#fff; --ok:#1a8f4a; --warn:#b9770e; --err:#c0392b;
+    --pill:#eef1f6; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#14161a; --card:#1e2127; --ink:#e8eaed; --muted:#9aa0aa; --line:#2c3038;
+      --accent:#5b8bff; --pill:#262a31;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.45;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:24px 16px 60px}
+  h1{font-size:22px;margin:0 0 2px}
+  .sub{color:var(--muted);font-size:13px;margin:0 0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin:0 0 16px}
+  .card h2{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:0 0 14px}
+  label{font-size:13px;color:var(--muted)}
+  select,input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);
+       border-radius:8px;padding:8px 10px;width:100%}
+  input[type=number]{text-align:center}
+  .row{display:flex;gap:10px;align-items:center}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+  @media(max-width:560px){.grid2,.grid3{grid-template-columns:1fr}}
+  .key{display:grid;grid-template-columns:110px 1fr 90px 70px;gap:10px;align-items:center;margin:0 0 10px}
+  @media(max-width:560px){.key{grid-template-columns:1fr 1fr}.key .name{grid-column:1 / -1}}
+  .key .name{font-weight:600;font-size:14px}
+  .hint{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .btn{font:inherit;font-weight:600;border:1px solid var(--line);background:var(--pill);color:var(--ink);
+       border-radius:9px;padding:10px 16px;cursor:pointer;transition:.12s}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--muted);display:inline-block;margin-right:7px;vertical-align:middle}
+  .dot.on{background:var(--ok)} .dot.off{background:var(--err)}
+  .status{font-size:13px;color:var(--muted);margin-top:10px;min-height:18px}
+  .pill{display:inline-block;background:var(--pill);border-radius:20px;padding:2px 10px;font-size:12px;color:var(--muted);
+        font-family:var(--mono)}
+  .banner{border-radius:10px;padding:12px 14px;font-size:14px;margin:0 0 16px}
+  .banner.err{background:rgba(192,57,43,.12);color:var(--err);border:1px solid rgba(192,57,43,.3)}
+  .hidden{display:none}
+  summary{cursor:pointer;font-size:13px;color:var(--muted)}
+  #log{font-family:var(--mono);font-size:12px;background:var(--bg);border:1px solid var(--line);border-radius:8px;
+       height:150px;overflow:auto;padding:8px 10px;margin-top:10px;white-space:pre-wrap;color:var(--muted)}
+  .foot{color:var(--muted);font-size:12px;text-align:center;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Push-n-Turn — Configuration</h1>
+  <p class="sub">Set what each key sends, the encoder CC and the MIDI channel for the <strong>Push&amp;Turn 31</strong>
+     and <strong>Push 4</strong>. Web-MIDI tool — open in <strong>Chrome</strong> or <strong>Edge</strong> (macOS, Windows or Linux).</p>
+
+  <div id="unsupported" class="banner err hidden">
+    This browser does not expose the <strong>Web MIDI API</strong>. Please open this file in Google Chrome or
+    Microsoft Edge. (Safari and Firefox do not support Web MIDI.)
+  </div>
+
+  <div class="card">
+    <h2>Device</h2>
+    <div class="grid2">
+      <div>
+        <label for="outSel">MIDI Output (host → device)</label>
+        <select id="outSel"></select>
+      </div>
+      <div>
+        <label for="inSel">MIDI Input (device → host)</label>
+        <select id="inSel"></select>
+      </div>
+    </div>
+    <div class="status" id="devStatus"><span class="dot off"></span>Select the device's MIDI ports.</div>
+  </div>
+
+  <div class="card">
+    <div class="row" style="justify-content:space-between;margin-bottom:14px">
+      <h2 style="margin:0">Keys</h2>
+      <div class="row" style="width:auto">
+        <select id="layoutSel" style="width:auto" title="Detected automatically when reading from the device">
+          <option value="31">Push&amp;Turn 31</option>
+          <option value="4">Push 4</option>
+        </select>
+        <span class="pill" id="fwPill">firmware —</span>
+      </div>
+    </div>
+    <div id="keys"></div>
+
+    <div id="encBox" class="grid2" style="margin-top:6px">
+      <div>
+        <label for="encCC">Encoder CC number</label>
+        <input type="number" id="encCC" min="0" max="127">
+      </div>
+      <div>
+        <label for="encSteps">Encoder step size (per detent)</label>
+        <input type="number" id="encSteps" min="1" max="15">
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:12px">
+      <div>
+        <label for="chanSel">MIDI channel</label>
+        <select id="chanSel"></select>
+      </div>
+      <div>
+        <label for="velocity">Note velocity</label>
+        <input type="number" id="velocity" min="1" max="127">
+      </div>
+    </div>
+
+    <div class="btns" style="margin-top:16px">
+      <button class="btn" id="readBtn" disabled>Read from device</button>
+      <button class="btn primary" id="writeBtn" disabled>Write &amp; save to device</button>
+      <button class="btn" id="defBtn">Reset fields to defaults</button>
+    </div>
+    <div class="status" id="opStatus"></div>
+  </div>
+
+  <div class="card">
+    <details>
+      <summary>Advanced &amp; activity log</summary>
+      <div class="btns" style="margin-top:12px">
+        <button class="btn" id="factoryBtn" disabled>Factory reset device</button>
+        <button class="btn" id="bootBtn" disabled>Reboot into bootloader (firmware update)</button>
+      </div>
+      <div id="log"></div>
+    </details>
+  </div>
+
+  <p class="foot">Push-n-Turn v2 · Concept &amp; Code · config protocol: CC on MIDI channel 11 (status 0xBA), commands on CC 102</p>
+</div>
+
+<script>
+"use strict";
+// ---- Protocol (must match firmware src/midi.c and include/firmware.h) ----
+const CFG_NIBBLE = 10, STATUS_CC = 0xB0 | CFG_NIBBLE;   // 0xBA
+const CC_CMD = 102;
+const CMD = {ENTER:42, SAVE:43, TYPE:44, FW:45, CONFIG:46, STEPS:47, CHANNEL:48, BOOT:49, FACTORY:50};
+const CC_TYPE = 103, CC_FW = 104, CC_STEPS = 105, CC_CHAN = 106, CC_VEL = 107;
+const T_NOTE = 1, T_TOGGLE = 2, T_MOMENTARY = 3;
+const CC_ENC = 40, CC_SETCHAN = 50, CC_SETSTEPS = 60, CC_SETVEL = 70;
+
+const DEVICES = {
+  31: {name:"Push&Turn 31", keys:["Key 1","Key 2","Key 3","Encoder push"], encoder:true,
+       def:{types:[1,1,1,2], data:[60,62,64,20], enc:21, steps:2, chan:0, vel:127}},
+  4:  {name:"Push 4", keys:["Key 1","Key 2","Key 3","Key 4"], encoder:false,
+       def:{types:[1,1,1,1], data:[60,62,64,65], enc:21, steps:2, chan:0, vel:127}},
+};
+const PORT_MATCH = /push/i;
+
+let midi = null, outPort = null, inPort = null;
+let layout = 31, keyEls = [];
+let rx = null, readTimer = null;
+
+const $ = id => document.getElementById(id);
+const clamp = (v,a,b) => Math.max(a, Math.min(b, isNaN(v) ? a : v));
+const NOTE_NAMES = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+const noteName = n => NOTE_NAMES[n % 12] + (Math.floor(n / 12) - 1);
+
+function log(msg){ const el=$("log"); el.textContent += `[${new Date().toLocaleTimeString()}] ${msg}\n`; el.scrollTop = el.scrollHeight; }
+function setOp(msg){ $("opStatus").textContent = msg; }
+function setDev(ok, html){ $("devStatus").innerHTML = `<span class="dot ${ok?"on":"off"}"></span>` + html; }
+
+// ---------- UI ----------
+function buildKeys(){
+  const dev = DEVICES[layout], host = $("keys");
+  host.innerHTML = ""; keyEls = [];
+  dev.keys.forEach((label, i) => {
+    const row = document.createElement("div"); row.className = "key";
+    const name = document.createElement("div"); name.className = "name"; name.textContent = label;
+    const type = document.createElement("select");
+    [[T_NOTE,"Note"],[T_TOGGLE,"CC toggle"],[T_MOMENTARY,"CC momentary"]].forEach(([v,t]) => {
+      const o = document.createElement("option"); o.value = v; o.textContent = t; type.appendChild(o); });
+    const num = document.createElement("input"); num.type = "number"; num.min = 0; num.max = 127;
+    const hint = document.createElement("div"); hint.className = "hint";
+    const upd = () => { const v = clamp(parseInt(num.value,10),0,127);
+      hint.textContent = parseInt(type.value,10) === T_NOTE ? noteName(v) : "CC " + v; };
+    type.addEventListener("change", upd); num.addEventListener("input", upd);
+    row.append(name, type, num, hint); host.appendChild(row);
+    keyEls.push({type, num, upd});
+  });
+  $("encBox").classList.toggle("hidden", !dev.encoder);
+  $("layoutSel").value = layout;
+}
+(function buildChannels(){
+  const sel = $("chanSel");
+  for (let c = 1; c <= 16; c++){ const o = document.createElement("option"); o.value = c-1; o.textContent = "Channel " + c; sel.appendChild(o); }
+})();
+
+function setKey(i, type, data){
+  if (!keyEls[i]) return;
+  keyEls[i].type.value = type; keyEls[i].num.value = data; keyEls[i].upd();
+}
+function applyDefaults(){
+  const d = DEVICES[layout].def;
+  d.types.forEach((t,i) => setKey(i, t, d.data[i]));
+  $("encCC").value = d.enc; $("encSteps").value = d.steps;
+  $("chanSel").value = d.chan; $("velocity").value = d.vel;
+}
+function setLayout(t){
+  if (!DEVICES[t] || t === layout) return;
+  layout = t; buildKeys(); applyDefaults();
+}
+$("layoutSel").addEventListener("change", () => setLayout(parseInt($("layoutSel").value,10)));
+$("defBtn").addEventListener("click", () => { applyDefaults(); setOp("Fields reset to factory defaults (not yet written)."); });
+
+// ---------- Web MIDI ----------
+async function init(){
+  buildKeys(); applyDefaults();
+  if (!navigator.requestMIDIAccess){ $("unsupported").classList.remove("hidden"); return; }
+  try { midi = await navigator.requestMIDIAccess({sysex:false}); }
+  catch(e){ const b = $("unsupported"); b.classList.remove("hidden"); b.textContent = "Could not get MIDI access: " + e.message; return; }
+  midi.onstatechange = refreshPorts;
+  refreshPorts();
+  log("Web MIDI ready.");
+}
+function refreshPorts(){
+  const outs = [...midi.outputs.values()], ins = [...midi.inputs.values()];
+  fillSelect($("outSel"), outs, outPort); fillSelect($("inSel"), ins, inPort);
+  autoPick($("outSel"), outs); autoPick($("inSel"), ins);
+  bindPorts();
+}
+function fillSelect(sel, ports, current){
+  const prev = current ? current.id : sel.value;
+  sel.innerHTML = "";
+  const none = document.createElement("option"); none.value = ""; none.textContent = ports.length ? "(select)" : "(no ports)"; sel.appendChild(none);
+  ports.forEach(p => { const o = document.createElement("option"); o.value = p.id; o.textContent = p.name; sel.appendChild(o); });
+  if (prev && ports.some(p => p.id === prev)) sel.value = prev;
+}
+function autoPick(sel, ports){
+  if (sel.value && ports.some(p => p.id === sel.value)) return;
+  // macOS may show the device under a name cached from another 1209:CAC1 device,
+  // so fall back to the only port there is; the type query then identifies it.
+  const m = ports.find(p => PORT_MATCH.test(p.name)) || (ports.length === 1 ? ports[0] : null);
+  if (m) sel.value = m.id;
+}
+function bindPorts(){
+  const wasReady = !!(outPort && inPort);
+  outPort = [...midi.outputs.values()].find(p => p.id === $("outSel").value) || null;
+  if (inPort) inPort.onmidimessage = null;
+  inPort = [...midi.inputs.values()].find(p => p.id === $("inSel").value) || null;
+  if (inPort) inPort.onmidimessage = onMIDIMessage;
+  $("readBtn").disabled = !(outPort && inPort);
+  $("writeBtn").disabled = !outPort;
+  $("bootBtn").disabled = !outPort;
+  $("factoryBtn").disabled = !outPort;
+  if (outPort && inPort) setDev(true, `Connected — out: <strong>${outPort.name}</strong>, in: <strong>${inPort.name}</strong>`);
+  else if (outPort)      setDev(true, `Output ready (<strong>${outPort.name}</strong>). Select an input to read back settings.`);
+  else                   setDev(false, "Select the device's MIDI output and input ports.");
+  if (outPort && inPort && !wasReady) readFromDevice();   // auto-detect on connect
+}
+$("outSel").addEventListener("change", bindPorts);
+$("inSel").addEventListener("change", bindPorts);
+
+function sendCC(num, val, when){
+  if (!outPort) return;
+  const d = [STATUS_CC, num & 0x7f, val & 0x7f];
+  outPort.send(d, when);
+  log(`OUT  ${d.map(b => String(b).padStart(3)).join(" ")}   (CC${num}=${val})`);
+}
+
+// ---------- Incoming ----------
+function onMIDIMessage(ev){
+  const d = ev.data;
+  if (d.length < 3 || (d[0] & 0xF0) !== 0xB0 || (d[0] & 0x0F) !== CFG_NIBBLE) return;
+  const num = d[1], val = d[2];
+  log(`IN   ${[...d].map(b => String(b).padStart(3)).join(" ")}   (CC${num}=${val})`);
+  if (num === CC_CMD){
+    if (val === CMD.CONFIG && rx) finishRead();
+    else if (val === CMD.SAVE) setOp("Saved to device.");
+    else if (val === CMD.FACTORY) { setOp("Device reset to factory defaults."); setTimeout(readFromDevice, 100); }
+    return;
+  }
+  if (!rx) return;
+  const type = Math.floor(num / 10), key = num % 10;
+  if (num === CC_TYPE) rx.type = val;
+  else if (num === CC_FW) rx.fw = val;
+  else if (num === CC_STEPS) rx.steps = val;
+  else if (num === CC_CHAN) rx.chan = val;
+  else if (num === CC_VEL) rx.vel = val;
+  else if (type >= T_NOTE && type <= T_MOMENTARY && key >= 1) rx.keys[key-1] = {type, data:val};
+  else if (type === 4) rx.enc = val;
+}
+
+// ---------- Read ----------
+$("readBtn").addEventListener("click", readFromDevice);
+function readFromDevice(){
+  if (!outPort || !inPort) return;
+  rx = {keys:[], type:null, fw:null, enc:null, steps:null, chan:null, vel:null};
+  setOp("Reading…");
+  sendCC(CC_CMD, CMD.TYPE); sendCC(CC_CMD, CMD.FW); sendCC(CC_CMD, CMD.CONFIG);
+  clearTimeout(readTimer);
+  readTimer = setTimeout(finishRead, 800);       // fallback if the end marker is lost
+}
+function finishRead(){
+  clearTimeout(readTimer);
+  const r = rx; rx = null;
+  if (!r) return;
+  if (r.type == null && !r.keys.length){
+    setOp("No reply. Check that the input port is the Push device (firmware v2 or later), then try again.");
+    return;
+  }
+  if (r.type != null){
+    if (DEVICES[r.type]) setLayout(r.type);
+    else log(`Unknown device type ${r.type}`);
+  }
+  r.keys.forEach((k, i) => k && setKey(i, k.type, k.data));
+  if (r.enc != null) $("encCC").value = r.enc;
+  if (r.steps != null) $("encSteps").value = r.steps;
+  if (r.chan != null && r.chan <= 15) $("chanSel").value = r.chan;
+  if (r.vel != null) $("velocity").value = r.vel;
+  $("fwPill").textContent = "firmware " + (r.fw != null ? "v" + (r.fw / 10).toFixed(1) : "—");
+  setOp(`Read OK — ${DEVICES[layout].name}, ${r.keys.filter(Boolean).length} keys, channel ${(r.chan ?? 0) + 1}.`);
+}
+
+// ---------- Write ----------
+$("writeBtn").addEventListener("click", writeToDevice);
+function writeToDevice(){
+  if (!outPort) return;
+  const dev = DEVICES[layout];
+  const t0 = performance.now() + 20, step = 15; let k = 0;
+  const at = () => t0 + step * (k++);
+  setOp("Writing…");
+  sendCC(CC_CMD, CMD.ENTER, at());
+  keyEls.forEach((el, i) => {
+    const type = parseInt(el.type.value, 10), data = clamp(parseInt(el.num.value, 10), 0, 127);
+    sendCC(type * 10 + i + 1, data, at());
+  });
+  if (dev.encoder){
+    sendCC(CC_ENC, clamp(parseInt($("encCC").value,10),0,127), at());
+    sendCC(CC_SETSTEPS, clamp(parseInt($("encSteps").value,10),1,15), at());
+  }
+  sendCC(CC_SETCHAN, parseInt($("chanSel").value,10), at());
+  sendCC(CC_SETVEL, clamp(parseInt($("velocity").value,10),1,127), at());
+  sendCC(CC_CMD, CMD.SAVE, at());
+  setTimeout(() => { if (inPort) readFromDevice(); else setOp("Written & saved. (Select an input port to verify.)"); },
+             step * k + 150);
+}
+
+// ---------- Advanced ----------
+$("factoryBtn").addEventListener("click", () => {
+  if (!confirm("Restore the device's factory settings and save them?")) return;
+  sendCC(CC_CMD, CMD.FACTORY);
+  if (!inPort) setOp("Factory reset sent.");
+});
+$("bootBtn").addEventListener("click", () => {
+  if (!confirm("Reboot the device into its USB bootloader for a firmware update?\n\nThe MIDI device disappears until it is flashed or re-plugged.")) return;
+  sendCC(CC_CMD, CMD.BOOT);
+  setOp("Bootloader command sent. Flash with: pio run -e <env> -t upload");
+});
+
+init();
+</script>
+</body>
+</html>
